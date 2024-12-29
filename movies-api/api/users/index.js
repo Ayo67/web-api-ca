@@ -50,7 +50,7 @@ async function registerUser(req, res) {
 
 async function authenticateUser(req, res) {
     try {
-        const user = await User.findOne({ username: req.body.username }); // Assuming login via username
+        const user = await User.findOne({ username: req.body.username });
         if (!user) {
             return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
         }
