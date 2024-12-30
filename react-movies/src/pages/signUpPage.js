@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, IconButton, InputAdornment,} from "@mui/material";
+import {TextField,Button,Box,Typography,IconButton,InputAdornment,} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { auth } from "../firebase/config"; 
-import { getDatabase, ref, set } from "firebase/database"; // For Realtime Database
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/our-apis"; // Import your custom API function
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
@@ -48,21 +46,18 @@ const SignUpPage = () => {
     if (!validate()) return;
 
     try {
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      
+      const response = await registerUser(email, password );
 
-      // Save user info to Realtime Database
-      const db = getDatabase();
-      await set(ref(db, "users/" + user.uid), {
-        email: user.email,
-        createdAt: new Date().toISOString(),
-      });
-
-      alert("Signup successful!");
-      navigate("/login"); // Redirect to login after successful signup
+      if (response.success) {
+        alert("Signup successful!");
+        navigate("/login"); 
+      } else {
+        // Handle API errors
+        alert(response.message || "An error occurred during signup.");
+      }
     } catch (error) {
-      alert(error.message);
+      alert(error.message || "An unexpected error occurred.");
     }
   };
 
