@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {TextField,Button,Box,Typography,IconButton,InputAdornment,} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/our-apis"; // Import your custom API function
+import { registerUser } from "../api/movie-api"; // Import your custom API function
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");

@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("authToken");
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return !!user;
@@ -41,7 +41,7 @@ const App = () => {
   const shouldShowHeader = !hideHeaderPaths.includes(location.pathname);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); 
+    localStorage.removeItem("authToken"); 
     localStorage.removeItem("favorites");
     queryClient.clear();
     setIsAuthenticated(false); 

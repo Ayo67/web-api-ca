@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 const BASE_URL = 'http://localhost:8080/api'; 
 
 const request = async (endpoint, method = 'GET', body = null, token = null) => {
@@ -30,8 +29,13 @@ const request = async (endpoint, method = 'GET', body = null, token = null) => {
         }
 
         if (!response.ok) {
+            
+            if (response.status === 404) {
+              return null; 
+            }
             throw new Error(data.msg || data.message || 'Something went wrong');
-        }
+          }
+        
 
         return data;
     } catch (error) {
@@ -40,88 +44,74 @@ const request = async (endpoint, method = 'GET', body = null, token = null) => {
     }
 };
 
-// Get all users
-export const getAllUsers = async () => {
-    return request('/users');
-};
 
-// Register a new user
-export const registerUser = async (username, password) => {
-    return request('/users?action=register', 'POST', { username, password });
-};
 
-// Authenticate a user
-export const authenticateUser = async (username, password) => {
-    return request('/users', 'POST', { username, password });
-};
-
-// Update a user
-export const updateUser = async (id, updateData, token) => {
-    return request(`/users/${id}`, 'PUT', updateData, token);
-};
-
-// Create a new review for a movie
-export const createReview = async (movieId, reviewData, token) => {
-    
-    return request(`/reviews/movies/${movieId}/review`, 'POST', reviewData, token);
-};
-
-// Add a movie to the user's favorites
-export const addToFavourites = async (userId, movieId, token) => {
-    return request(`/favourites/users/${userId}/favourite`, 'POST', { movieId }, token);
-};
-
-export const getUserFavourites = async (userId, token) => {
-    return request(`/favourites/users/${userId}/favourite`, 'GET',null,  token);
-};
-
-// Get paginated list of movies
-export const getMovies = async (page = 1, limit = 10,token) => {
-    return request(`/movies?page=${page}&limit=${limit}`, 'GET',null, token);
-};
-
-// Get movie details by ID
-export const getMovieDetails = async (movieId) => {
-    return request(`/movies/${movieId}`);
-};
-export const getMoviesByGenre = async (genreId, page = 1, limit = 10) => {
-    const token = localStorage.getItem("authToken"); 
-
-    return request(`/movies/genre/${genreId}?page=${page}&limit=${limit}`, 'GET', null, token);
-};
+// GET /tmdb/upcoming
 export const getUpcomingMovies = async (offset = 0) => {
     const token = localStorage.getItem("authToken");
     return request(`/movies/tmdb/upcoming?offset=${offset}`, 'GET', null, token);
 };
-export const getTopRatedMovies = async (offset = 0) => {
+
+//GET /tmdb/genres
+export const getGenres = async () => {
     const token = localStorage.getItem("authToken");
-    return request(`/movies/tmdb/topRated?offset=${offset}`, 'GET', null, token);
+    return request(`/movies/tmdb/genres`, 'GET', null, token);
 };
-export const getTrending = async (offset = 0) => {
-    const token = localStorage.getItem("authToken");
-    return request(`/movies/tmdb/trending?offset=${offset}`, 'GET', null, token);
+
+//GET /movies/
+export const getMovies = async (page = 1, limit = 10,token) => {
+    return request(`/movies?page=${page}&limit=${limit}`, 'GET',null, token);
 };
+
+//GET /movies/:id
 export const getMovie = async (id) => {
     const token = localStorage.getItem("authToken");
     return request(`/movies/${id}`, 'GET', null, token);
 };
 
-export const getMovieCast = async (id) => {
+//GET /reviews/:id
+export const getMovieReviews = async (id) => {
     const token = localStorage.getItem("authToken");
-    return request(`/movies/cast/${id}`, 'GET', null, token);
+    return request(`/movies/reviews/${id}`, 'GET', null, token);
 };
 
-export const getActorCredits = async (id) => {
-    const token = localStorage.getItem("authToken");
-    return request(`/movies/actor/${id}`, 'GET', null, token);
-};
-
+//GET /movies/:id/images
 export const getMovieImages = async (id) => {
     const token = localStorage.getItem("authToken");
     return request(`/movies/images/${id}`, 'GET', null, token);
 };
 
-export const getMovieReviews = async (id) => {
-    const token = localStorage.getItem("authToken");
-    return request(`/movies/reviews/${id}`, 'GET', null, token);
+
+//POST /users?action=register
+export const registerUser = async (username, password) => {
+    return request('/users?action=register', 'POST', { username, password });
+};
+
+//POST /users/
+export const authenticateUser = async (username, password) => {
+    return request('/users', 'POST', { username, password });
+};
+
+//GET /users/
+export const getAllUsers = async () => {
+    return request('/users', 'GET', null, null);
+};
+
+//PUT /users/:id
+export const updateUser = async (id) => {
+    return request(`/users/${id}`, 'PUT', null, null);
+};
+
+// Create a new review for a movie that stored in MongoDB Review Collection
+export const createReview = async (movieId, reviewData, token) => {
+    return request(`/reviews/movies/${movieId}/review`, 'POST', reviewData, token);
+};
+
+// Add Favourite to MongoDB Favorite Collection
+export const addToFavourites = async (userId, movieId, token) => {
+    return request(`/favourites/users/${userId}/favourite`, 'POST', { movieId }, token);
+};
+// GET and shows the favourite movies of the specific user.
+export const getUserFavourites = async (userId, token) => {
+    return request(`/favourites/users/${userId}/favourite`, 'GET',null,  token);
 };
