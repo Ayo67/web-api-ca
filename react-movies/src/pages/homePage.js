@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { getMovies, searchMovies, getMoviesByGenre } from "../api/tmdb-api"; 
+import { getMovies } from "../api/movie-api";
+import {getMoviesByGenre,searchMovies} from "../api/tmdb-api"
 import PageTemplate from '../components/templateMovieListPage';
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
@@ -13,6 +14,8 @@ const HomePage = () => {
 
   const itemsPerPage = 20;
 
+  const authToken = localStorage.getItem("authToken");
+
   const { data, error, isLoading, isError } = useQuery(
     ['discover', currentPage, searchTerm, selectedGenre], 
     () => {
@@ -21,7 +24,7 @@ const HomePage = () => {
       } else if (selectedGenre !== "0") {
         return getMoviesByGenre(selectedGenre, currentPage);
       }
-      return getMovies((currentPage - 1) * itemsPerPage);
+      return getMovies(currentPage, itemsPerPage, authToken); 
     },
     { keepPreviousData: true }
   );

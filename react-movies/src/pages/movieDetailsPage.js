@@ -2,24 +2,28 @@ import React from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import MovieDetails from "../components/movieDetails";
 import PageTemplate from "../components/templateMoviePage";
-import { getMovie, getMovieCast } from "../api/tmdb-api";
+import {getMovieCast} from "../api/tmdb-api"
+import { getMovie } from "../api/movie-api";
+
 import { useQuery } from "react-query";
 import Spinner from '../components/spinner';
-import Button from "@mui/material/Button";
+
 
 const MoviePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   // Fetch movie details
-  const { data: movie, error: movieError, isLoading: isMovieLoading, isError: isMovieError } = useQuery(
-    ["movie", { id }],
-    getMovie,{
+  const { data: movie, error: movieError, isLoading: isMovieLoading, isError: isMovieError  } = useQuery(
+    ["movie", { id }], 
+    () => getMovie(id), 
+    {
       staleTime: 1000 * 60 * 60 * 24, 
-      cacheTime: 1000 * 60 * 60 * 24 * 7,
-      refetchOnWindowFocus: false,
+      cacheTime: 1000 * 60 * 60 * 24 * 7, 
+      refetchOnWindowFocus: false, 
     }
   );
+  
 
   // Fetch cast details
   const { data: cast, error: castError, isLoading: isCastLoading, isError: isCastError } = useQuery(
