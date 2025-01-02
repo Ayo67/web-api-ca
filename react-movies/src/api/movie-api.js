@@ -7,17 +7,12 @@ const request = async (endpoint, method = 'GET', body = null, token = null) => {
     };
     console.log(headers);
 
-    const options = {
-        method,
-        headers,
-    };
-
+    const options = { method, headers, };
     if (body) {
         options.body = JSON.stringify(body);
     }
 
-    try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    try {const response = await fetch(`${BASE_URL}${endpoint}`, options);
         console.log(response);
         
         const data = await response.json();
