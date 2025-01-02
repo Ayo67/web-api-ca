@@ -7,12 +7,14 @@ const request = async (endpoint, method = 'GET', body = null, token = null) => {
     };
     console.log(headers);
 
-    const options = { method, headers, };
+    const options = {method,headers,};
+
     if (body) {
         options.body = JSON.stringify(body);
     }
 
-    try {const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, options);
         console.log(response);
         
         const data = await response.json();
@@ -78,12 +80,12 @@ export const getMovieImages = async (id) => {
 
 
 //POST /users?action=register
-export const registerUser = async (username, password) => {
+export const signup = async (username, password) => {
     return request('/users?action=register', 'POST', { username, password });
 };
 
 //POST /users/
-export const authenticateUser = async (username, password) => {
+export const login = async (username, password) => {
     return request('/users', 'POST', { username, password });
 };
 
