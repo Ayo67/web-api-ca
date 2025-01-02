@@ -1,36 +1,21 @@
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
-import React, { useState, useContext } from "react";
-import { MoviesContext } from "../../contexts/moviesContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import { createReview } from "../../api/movie-api";
 
 const ratings = [
-  {
-    value: 5,
-    label: "Excellent",
-  },
-  {
-    value: 4,
-    label: "Good",
-  },
-  {
-    value: 3,
-    label: "Average",
-  },
-  {
-    value: 2,
-    label: "Poor",
-  },
-  {
-    value: 0,
-    label: "Terrible",
-  },
+  { value: 5, label: "Excellent" },
+  { value: 4, label: "Good" },
+  { value: 3, label: "Average" },
+  { value: 2, label: "Poor" },
+  { value: 0, label: "Terrible" },
 ];
 
 const styles = {
@@ -61,23 +46,25 @@ const styles = {
 };
 
 const ReviewForm = ({ movie }) => {
-const context = useContext(MoviesContext);
-const [rating, setRating] = useState(3);
-const [open, setOpen] = useState(false); 
+  console.log(movie);
+  const [rating, setRating] = useState(3);
+  const [open, setOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+  const [snackSeverity, setSnackSeverity] = useState("success"); // success or error
   const navigate = useNavigate();
 
   const handleSnackClose = (event) => {
     setOpen(false);
-    navigate("/movies/favorites");
+
   };
-  
+
   const defaultValues = {
     author: "",
     review: "",
     agree: false,
     rating: "3",
   };
-  
+
   const {
     control,
     formState: { errors },
@@ -89,13 +76,41 @@ const [open, setOpen] = useState(false);
     setRating(event.target.value);
   };
 
-  const onSubmit = (review) => {
-    review.movieId = movie.id;
-    review.rating = rating;
-    // console.log(review);
-    context.addReview(movie, review);
-    setOpen(true); // NEW
+  const onSubmit = async (review) => {
+    try {
+      // Get authToken and userData from localStorage
+      const authToken = localStorage.getItem("authToken");
+      
+      
+      const userData = localStorage.getItem("userData"); 
+      if (!authToken || !userData) {
+        throw new Error("Authentication or user data missing.");
+      }
+  
+      // Create the reviewData object
+      const reviewData = {
+        userId: userData,
+        author: review.author,
+        content: review.review, // Renamed 'review' to 'content' as required
+        rating: rating,
+      };
+  
+      console.log("Review Data to Submit:", reviewData);
+  
+      const response = await createReview(movie.id, reviewData, authToken); 
+      console.log("Submitted", response);
+      
+      setSnackMessage("Thank you for submitting a review!");
+      setSnackSeverity("success");
+      setOpen(true);
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      setSnackMessage("Failed to submit review. Please try again.");
+      setSnackSeverity("error");
+      setOpen(true);
+    }
   };
+  
 
   return (
     <Box component="div" sx={styles.root}>
@@ -108,14 +123,8 @@ const [open, setOpen] = useState(false);
         open={open}
         onClose={handleSnackClose}
       >
-        <MuiAlert
-          severity="success"
-          variant="filled"
-          onClose={handleSnackClose}
-        >
-          <Typography variant="h4">
-            Thank you for submitting a review
-          </Typography>
+        <MuiAlert severity={snackSeverity} variant="filled" onClose={handleSnackClose}>
+          <Typography variant="h6">{snackMessage}</Typography>
         </MuiAlert>
       </Snackbar>
 
@@ -174,7 +183,6 @@ const [open, setOpen] = useState(false);
             {errors.review.message}
           </Typography>
         )}
-
         <Controller
           control={control}
           name="rating"
@@ -196,7 +204,6 @@ const [open, setOpen] = useState(false);
             </TextField>
           )}
         />
-
         <Box sx={styles.buttons}>
           <Button
             type="submit"
@@ -214,7 +221,7 @@ const [open, setOpen] = useState(false);
             onClick={() => {
               reset({
                 author: "",
-                content: "",
+                review: "",
               });
             }}
           >

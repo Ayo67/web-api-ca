@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -9,7 +9,9 @@ import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import MovieReviews from "../movieReviews";
+import ReviewsForm from "../reviewForm"
 import ActorCard from "../actorCard";
 
 const root = {
@@ -23,7 +25,7 @@ const root = {
 const chip = { margin: 0.5 };
 
 const MovieDetails = ({ movie, cast, navigateToActorDetails }) => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <>
@@ -95,7 +97,17 @@ const MovieDetails = ({ movie, cast, navigateToActorDetails }) => {
         Reviews
       </Fab>
       <Drawer anchor="top" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <MovieReviews movie={movie} />
+        <div style={{ padding: "1em" }}>
+          <Typography variant="h6">Reviews</Typography>
+          <MovieReviews movie={movie} />
+          <ReviewsForm movie={movie}/>
+          <Button
+           type="submit"
+           variant="contained"
+           color="black"
+           onClick={() => setDrawerOpen(false)}
+           >Close</Button>
+        </div>
       </Drawer>
     </>
   );

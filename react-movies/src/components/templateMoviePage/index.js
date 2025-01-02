@@ -2,14 +2,14 @@ import React from 'react';
 import MovieHeader from "../headerMovie";
 import Grid from "@mui/material/Grid";
 import { Paper } from '@mui/material';
-import { getMovieImages } from "../../api/tmdb-api";
+import { getMovieImages } from "../../api/movie-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
 
 const TemplateMoviePage = ({ movie, children }) => {
   const { data, error, isLoading, isError } = useQuery(
     ["images", { id: movie?.id }],
-    getMovieImages
+    ()=>getMovieImages(movie?.id)
   );
 
   if (!movie || !movie.id) {
@@ -55,3 +55,4 @@ const TemplateMoviePage = ({ movie, children }) => {
 };
 
 export default TemplateMoviePage;
+
