@@ -21,6 +21,9 @@ const authenticate = async (request, response, next) => {
         request.user = user; 
         next();
     } catch(err) {
+        if (err.message === "jwt expired") {
+            return response.status(401).json({ message: 'Token expired', expired: true });
+        }
         next(new Error(`Verification Failed: ${err.message}`));
     }
 };
