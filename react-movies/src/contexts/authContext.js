@@ -4,7 +4,7 @@ import { login, signup } from "../api/movie-api";
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = (props) => {
-  const existingToken = localStorage.getItem("token");
+  const existingToken = localStorage.getItem("authToken");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState(existingToken);
   const [userName, setUserName] = useState("");
