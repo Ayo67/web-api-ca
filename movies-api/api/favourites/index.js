@@ -25,7 +25,7 @@ router.post('/users/:id/favourite', asyncHandler(async (req, res) => {
   res.status(201).json({ message: 'Favourite updated successfully', favourite });
 }));
 
-// Example error handling on the server side
+//error handling on the server side
 router.get('/users/:id/favourite', asyncHandler(async (req, res) => {
   try {
     const { id: userId } = req.params;

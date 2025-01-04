@@ -2,15 +2,16 @@ import React, { useContext } from "react";
 import { MoviesContext } from "../../contexts/moviesContext";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { storeFavoriteMovie } from "../../api/firebase-api"; 
+import {addToFavourites} from '../../api/movie-api'
 
 const AddToFavoritesIcon = ({ movie }) => {
   const context = useContext(MoviesContext);
 
   const handleAddToFavorites = async (e) => {
     e.preventDefault();
-    
-    await storeFavoriteMovie(movie.id); 
+    const authToken = localStorage.getItem("authToken");
+    const userData = localStorage.getItem("userData"); 
+    await addToFavourites(userData,movie.id,authToken); 
     context.addToFavorites(movie);
   };
 

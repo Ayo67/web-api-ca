@@ -31,13 +31,10 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-      
         <AuthContextProvider>
         <MoviesContextProvider>
           <Header />
-          
           <Routes>
-          
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/home" element={<HomePage />} />
