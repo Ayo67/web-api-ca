@@ -50,7 +50,9 @@ secret=YourJWTSecret
 - /api/users/favorites/{movieid} | POST | Adds a movie to the user's favorites list (requires authentication).
 - /movies/tmdb/upcoming: Fetch upcoming movies.
 - /movies/tmdb/genre/: Get movies by genre.
-- /movies/:id/image: Get movie Images
+- /movies/:id/image: Get movie Images.
+- /api/users | POST | Logs in a user
+- /api/users?action=register | POST | Registers a new user
 
 ## Security and Authentication
 
