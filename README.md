@@ -30,16 +30,16 @@ To run the application locally after cloning the repository:
 
 ## API Configuration
 
-Before running the API, ensure the .env file is properly configured as follows:
+Before running the API, ensure the `.env` file is properly configured as follows:
 
+```plaintext
 NODEENV=development
 PORT=8080
 HOST=localhost
 mongoDB=YourMongoConnectionURL
 seedDb=true
 secret=YourJWTSecret
-
-Replace YourMongoConnectionURL and YourJWTSecret with appropriate values for your setup.
+```
 
 ## API Design
 - /api/movies | GET | Retrieves a list of all movies.
@@ -69,7 +69,7 @@ Replace YourMongoConnectionURL and YourJWTSecret with appropriate values for you
 
 ## Integrating with React App
 
-- Improved and adapted UI to handle authenticated user sessions and protected views.
-- Enabled changes happening in the frontend to carryover to the Backend.
+- Improved and adapted UI to handle authenticated user sessions .
+- Ensured changes made in the frontend were synchronised with the Backend.
 - Integrated JWT-based authentication for secured routes and user management.
  
